@@ -142,7 +142,7 @@ CodralaCore::CodralaCreaORWin()
     // Final
     layoutCreaOR = new QVBoxLayout;
     if(layoutCreaOR == NULL)
-        return 0x21;
+        return 0x021;
     layoutCreaOR->addWidget(ongletsCreaOR);
 
     ongletsCreaOR->addTab(ongletClient, "Client");
