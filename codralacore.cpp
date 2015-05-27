@@ -42,7 +42,7 @@ CodralaCore::CodralaMenu()
     actionCreaOR = new QAction("Ordre de Réparation", this);
     if(actionCreaOR == NULL)
         return 0x003;
-    connect(actionCreaOR, SIGNAL(triggered(bool)), this, SLOT(ouvrirFenetreCreaOR()));
+    connect(actionCreaOR, SIGNAL(triggered()), this, SLOT(ouvrirFenetreCreaOR()));
     menuNouveau->addAction(actionCreaOR);
 
     menuFichier->addSeparator();
