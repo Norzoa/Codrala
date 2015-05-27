@@ -21,6 +21,7 @@
 int main(int argc, char *argv[])
 {
     QApplication codrala(argc, argv);
+    codrala.setStyle(QStyleFactory::create("fusion"));
 
     CodralaCore core;
     core.show();

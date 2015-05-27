@@ -23,11 +23,59 @@
 
 class CodralaCore:public QMainWindow
 {
+Q_OBJECT
+
 public:
     CodralaCore();
 
-private:
+public slots:
+    void ouvrirFenetreCreaOR();
 
+private:
+    // Fenêtre principale
+
+    int CodralaMenu(); // Fonction générant les menus du logiciel
+
+    QMdiArea *zoneGestOR = NULL;
+
+    // Menu
+
+    QMenu *menuFichier = NULL;
+    QMenu *menuEdition = NULL;
+    QMenu *menuOutils  = NULL;
+    QMenu *menuAide    = NULL;
+
+    QMenu   *menuNouveau  = NULL;
+    QAction *actionCreaOR = NULL;
+
+    QAction *actionQuitter = NULL;
+
+    // Fenêtre de création d'Ordre de Réparation
+
+    int CodralaCreaORWin(); //Création de la fenêtre de création d'Ordre de réparation
+
+    QMdiSubWindow *fenetreCreaOR = NULL;
+
+    QWidget *widgetCreaOR = NULL;
+    QVBoxLayout *layoutCreaOR = NULL;
+
+    QTabWidget *ongletsCreaOR = NULL;
+
+    // Onglet client
+    QWidget *ongletClient = NULL;
+
+    QVBoxLayout *layoutClient = NULL;
+    QFormLayout *layoutInformationClient = NULL;
+    QHBoxLayout *layoutBoutonClient = NULL;
+
+    QLineEdit *nom        = NULL;
+    QLineEdit *prenom     = NULL;
+    QLineEdit *adresse    = NULL;
+    QLineEdit *codePostal = NULL;
+    QLineEdit *ville      = NULL;
+    QLineEdit *numFix     = NULL;
+    QLineEdit *numMob     = NULL;
+    QLineEdit *email      = NULL;
 };
 
 #endif
