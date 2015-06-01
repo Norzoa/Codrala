@@ -20,6 +20,10 @@
 /* Contient le coeur du programme */
 
 #include <QtWidgets>
+#include <QFile>
+#include <QTextStream>
+#include <QDebug>
+#include "citydata.h"
 
 class CodralaCore:public QMainWindow
 {
@@ -30,8 +34,13 @@ public:
 
 public slots:
     void ouvrirFenetreCreaOR();
+    void comparerCpVille(const QString &);
 
 private:
+    // Splash
+
+    QSplashScreen screen;
+
     // Fenêtre principale
 
     int CodralaMenu(); // Fonction générant les menus du logiciel
@@ -68,11 +77,14 @@ private:
     QFormLayout *layoutInformationClient = NULL;
     QHBoxLayout *layoutBoutonClient = NULL;
 
+    QVector<CData> infoVille;
+    int lireVille();
+
     QLineEdit *nom        = NULL;
     QLineEdit *prenom     = NULL;
     QLineEdit *adresse    = NULL;
     QLineEdit *codePostal = NULL;
-    QLineEdit *ville      = NULL;
+    QComboBox *ville      = NULL;
     QLineEdit *numFix     = NULL;
     QLineEdit *numMob     = NULL;
     QLineEdit *email      = NULL;

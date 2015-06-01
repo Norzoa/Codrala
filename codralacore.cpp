@@ -18,15 +18,28 @@
 
 CodralaCore::CodralaCore()
 {
+    screen.setPixmap(QPixmap(":/img/splash"));
+    screen.show();
+    qApp->processEvents();
+
     // Initialisation des QWidget
+    screen.showMessage("Chargement de la zone de travail", Qt::AlignLeft | Qt::AlignBottom);
     zoneGestOR = new QMdiArea;
 
     // Création de la zone de travail
     setCentralWidget(zoneGestOR);
 
     // Création des menus
+    screen.showMessage("Chargement des menus", Qt::AlignLeft | Qt::AlignBottom);
     if(CodralaMenu() != 0x000)
         qApp->quit();
+
+    // Lecture ville
+    screen.showMessage("Chargement des villes", Qt::AlignLeft | Qt::AlignBottom);
+    if(lireVille() != 0x000)
+        qApp->quit();
+
+    screen.finish(this);
 }
 
 CodralaCore::CodralaMenu()
@@ -72,6 +85,52 @@ CodralaCore::CodralaMenu()
     return 0x000;
 }
 
+CodralaCore::lireVille()
+{
+    QFile csvVille(":/csv/cityData");
+    qDebug("Chargement villes");
+    if(csvVille.exists() == true)
+        qDebug("Le fichier peu être ouvert");
+    else
+        qDebug("Le fichier ne peu être ouvert");
+
+    if(csvVille.open(QIODevice::ReadOnly | QIODevice::Text | QIODevice::Unbuffered))
+    {
+        qDebug("Chargement fichier");
+        QTextStream flux(&csvVille);
+        CData lectLigne;
+
+        while(!flux.atEnd())
+        {
+            QString ligne;
+            QStringList infoCsv;
+            ligne = flux.readLine();
+            infoCsv = ligne.split(";");
+
+            //screen.showMessage("Chargement ville: " + infoCsv.at(1), Qt::AlignLeft | Qt::AlignBottom);
+
+            lectLigne.setCP(infoCsv.at(2));
+            lectLigne.setVille(infoCsv.at(1));
+
+            infoVille.resize(infoVille.size()+1);
+            infoVille.insert((infoVille.size()-1), lectLigne);
+
+            lectLigne.clear();
+        }
+        csvVille.close();
+
+
+    }
+    else
+    {
+        qDebug("Erreur ouverture ville");
+        qDebug() << csvVille.error();
+        return 0x001;
+    }
+
+    return 0x000;
+}
+
 CodralaCore::CodralaCreaORWin()
 {
     widgetCreaOR = new QWidget;
@@ -80,6 +139,8 @@ CodralaCore::CodralaCreaORWin()
     ongletsCreaOR = new QTabWidget(widgetCreaOR);
     if(ongletsCreaOR == NULL)
         return 0x020;
+    
+    // Client
 
     ongletClient = new QWidget;
     if(ongletClient == NULL)
@@ -101,8 +162,9 @@ CodralaCore::CodralaCreaORWin()
     codePostal = new QLineEdit;
     if(codePostal == NULL)
         return 0x012;
+    connect(codePostal, SIGNAL(textChanged(const QString &)), this, SLOT(comparerCpVille(const QString &)));
 
-    ville = new QLineEdit;
+    ville = new QComboBox;
     if(ville == NULL)
         return 0x013;
 
@@ -135,8 +197,6 @@ CodralaCore::CodralaCreaORWin()
     if(layoutClient == NULL)
         return 0x018;
 
-    //layoutClient->addLayout(layoutInformationClient);
-
     ongletClient->setLayout(layoutInformationClient);
 
     // Final
@@ -158,4 +218,16 @@ CodralaCore::CodralaCreaORWin()
 void CodralaCore::ouvrirFenetreCreaOR()
 {
     CodralaCreaORWin();
+}
+
+void CodralaCore::comparerCpVille(const QString &)
+{
+    ville->clear();
+    int i = 0;
+    while(i < infoVille.size())
+    {
+        if((infoVille.at(i).getCP()).compare(codePostal->text()) == 0)
+                ville->addItem(infoVille.at(i).getVille());
+        i++;
+    }
 }
