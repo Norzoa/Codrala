@@ -73,9 +73,7 @@ private:
     // Onglet client
     QWidget *ongletClient = NULL;
 
-    QVBoxLayout *layoutClient = NULL;
     QFormLayout *layoutInformationClient = NULL;
-    QHBoxLayout *layoutBoutonClient = NULL;
 
     QVector<CData> infoVille;
     int lireVille();
@@ -88,6 +86,23 @@ private:
     QLineEdit *numFix     = NULL;
     QLineEdit *numMob     = NULL;
     QLineEdit *email      = NULL;
+
+    // Onglet véhicule
+    QWidget *ongletVehicule = NULL;
+
+    QFormLayout *layoutInformationVehicule = NULL;
+
+    int lireMarque();
+
+    QComboBox *marque    = NULL;
+    QLineEdit *modele    = NULL;
+    QLineEdit *vin       = NULL;
+    QLineEdit *immat     = NULL;
+    QLineEdit *dateMeC   = NULL;
+    QLineEdit *cylindree = NULL;
+    QLineEdit *puissance = NULL;
+
+
 };
 
 #endif

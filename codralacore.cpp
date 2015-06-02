@@ -131,6 +131,31 @@ CodralaCore::lireVille()
     return 0x000;
 }
 
+int CodralaCore::lireMarque()
+{
+    QFile csvMarque(":/csv/marque");
+    qDebug("Chargement Marque");
+    if(csvMarque.exists() == true)
+        qDebug("Le fichier peu être ouvert");
+    else
+        qDebug("Le fichier ne peu être ouvert");
+
+    if(csvMarque.open(QIODevice::ReadOnly | QIODevice::Text | QIODevice::Unbuffered))
+    {
+        qDebug("Chargement fichier");
+        QTextStream flux(&csvMarque);
+        while(!flux.atEnd())
+        {
+            QString ligne;
+            ligne = flux.readLine();
+
+            marque->addItem(ligne);
+        }
+        csvMarque.close();
+    }
+    return 0x000;
+}
+
 CodralaCore::CodralaCreaORWin()
 {
     widgetCreaOR = new QWidget;
@@ -193,11 +218,59 @@ CodralaCore::CodralaCreaORWin()
     layoutInformationClient->addRow("Mobile", numMob);
     layoutInformationClient->addRow("Email", email);
 
-    layoutClient = new QVBoxLayout;
-    if(layoutClient == NULL)
-        return 0x018;
-
     ongletClient->setLayout(layoutInformationClient);
+
+    // Véhicule
+
+    ongletVehicule = new QWidget;
+    if(ongletVehicule == NULL)
+        return 0x022;
+
+    marque = new QComboBox;
+    if(marque == NULL)
+        return 0x023;
+    lireMarque();
+
+    modele = new QLineEdit;
+    if(modele == NULL)
+        return 0x024;
+
+    vin = new QLineEdit;
+    if(vin == NULL)
+        return 0x025;
+    vin->setMaxLength(17);
+
+    immat = new QLineEdit;
+    if(immat == NULL)
+        return 0x026;
+
+    dateMeC = new QLineEdit;
+    if(dateMeC == NULL)
+        return 0x027;
+
+    cylindree = new QLineEdit;
+    if(cylindree == NULL)
+        return 0x028;
+
+    puissance = new QLineEdit;
+    if(puissance == NULL)
+        return 0x029;
+
+    layoutInformationVehicule = new QFormLayout;
+    if(layoutInformationVehicule == NULL)
+        return 0x030;
+
+    layoutInformationVehicule->addRow("Marque",marque);
+    layoutInformationVehicule->addRow("Modèle",modele);
+    layoutInformationVehicule->addRow("VIN",vin);
+    layoutInformationVehicule->addRow("Immatriculation",immat);
+    layoutInformationVehicule->addRow("Date 1ère Mise en Circulation",dateMeC);
+    layoutInformationVehicule->addRow("Cylindrée (P.1)",cylindree);
+    layoutInformationVehicule->addRow("Puissance (P.2)",puissance);
+
+    ongletVehicule->setLayout(layoutInformationVehicule);
+
+
 
     // Final
     layoutCreaOR = new QVBoxLayout;
@@ -206,6 +279,7 @@ CodralaCore::CodralaCreaORWin()
     layoutCreaOR->addWidget(ongletsCreaOR);
 
     ongletsCreaOR->addTab(ongletClient, "Client");
+    ongletsCreaOR->addTab(ongletVehicule, "Véhicule");
     widgetCreaOR->setLayout(layoutCreaOR);
 
     fenetreCreaOR = zoneGestOR->addSubWindow(widgetCreaOR);
